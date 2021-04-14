@@ -10,8 +10,8 @@ def index(request):
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
     # Доступные книги (статус = 'a')
-    num_instances_available=BookInstance.objects.filter(status__exact='a').count()
-    num_authors=Author.objects.count()  # Метод 'all()' применён по умолчанию.
+    num_instances_available = BookInstance.objects.filter(status__exact='a').count()
+    num_authors = Author.objects.count()  # Метод 'all()' применён по умолчанию.
 
     # Отрисовка HTML-шаблона index.html с данными внутри
     # переменной контекста context
