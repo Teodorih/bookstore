@@ -33,7 +33,6 @@ class Book(models.Model):
     # ManyToManyField used because genre can contain many books. Books can cover many genres.
     # Genre class has already been defined so we can specify the object above.
 
-
     def __str__(self):
         """
         String for representing the Model object.
