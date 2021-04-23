@@ -19,5 +19,11 @@
     <p><strong>Imprint:</strong> {{copy.imprint}}</p>
     <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
     {% endfor %}
+
   </div>
+
+   {% if perms.catalog.can_mark_returned %}
+         <p><a href="{% url 'book_update' book.pk %}"> Edit </a></p>
+         <p><a href="{% url 'book_delete' book.pk %}"> Delete </a></p>
+    {% endif %}
 {% endblock %}
