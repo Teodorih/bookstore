@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import date
+from django.utils.translation import ugettext_lazy as _
 
 
 class Genre(models.Model):
@@ -78,7 +79,6 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ["due_back"]
-        permissions = (("can_mark_returned", "Set book as returned"),)
 
     def __str__(self):
         """
