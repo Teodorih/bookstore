@@ -55,7 +55,7 @@ class BookDetailView(generic.DetailView):
 
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 5
+    paginate_by = 10
     context_object_name = 'author_list'  # ваше собственное имя переменной контекста в шаблоне
 
 
