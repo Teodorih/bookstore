@@ -155,7 +155,7 @@ def files(request):
             newdoc.save()
 
             # Redirect to the document list after POST
-            return HttpResponseRedirect(reverse('catalog.views.files'))
+            return HttpResponseRedirect(reverse('files'))
     else:
         form = DocumentForm() # A empty, unbound form
 
