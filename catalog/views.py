@@ -11,6 +11,8 @@ from .models import Book, Author, BookInstance, Genre, Document
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
+from .tasks import add
+
 
 def index(request):
     """
@@ -151,6 +153,7 @@ def files(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
+            add.delay(4, 4)
             newdoc = Document(docfile=request.FILES['docfile'])
             newdoc.save()
 
