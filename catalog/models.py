@@ -123,3 +123,7 @@ class Language(models.Model):
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
         return self.name
+
+
+class Document(models.Model):
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d')

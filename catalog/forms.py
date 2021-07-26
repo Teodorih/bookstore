@@ -47,3 +47,10 @@ class RenewBookModelForm(ModelForm):
         labels = {'due_back': _('Renewal date'), }
         help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 3).'), }
         permissions = (("can_mark_returned", "Set book as returned"),)
+
+
+class DocumentForm(forms.Form):
+    docfile = forms.FileField(
+        label='Select a file',
+        help_text='max. 42 megabytes'
+    )
