@@ -164,6 +164,8 @@ def files(request):
 
     # Render list page with the documents and the form
     return render(
+        request,
         'catalog/files.html',
         {'documents': documents, 'form': form}
     )
+
