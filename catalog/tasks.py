@@ -1,5 +1,7 @@
 from celery import Celery
 
+#celery -A catalog.tasks worker -l info
+
 app = Celery('catalog', broker='redis://localhost:6379',  include=['catalog.tasks'])
 i = 1 +2
 
@@ -9,5 +11,6 @@ if __name__ == '__main__':
     app.start()
 
 @app.task
-def add(x, y):
+def add(x, y, newdoc):
+    newdoc.save()
     return x + y

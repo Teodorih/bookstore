@@ -153,9 +153,12 @@ def files(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            add.delay(4, 4)
             newdoc = Document(docfile=request.FILES['docfile'])
-            newdoc.save()
+
+            add.delay(4, 4, newdoc)
+
+            #newdoc = Document(docfile=request.FILES['docfile'])
+            #newdoc.save()
 
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('files'))
