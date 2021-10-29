@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Author, Genre, Book, BookInstance, Language
+from .models import Author, Genre, Book, BookInstance, Language, User
 
 #admin.site.register(Book)
 #admin.site.register(Author)
@@ -45,3 +45,8 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('status', 'due_back', 'borrower')
         }),
     )
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    pass

@@ -155,10 +155,10 @@ def files(request):
         if form.is_valid():
             newdoc = Document(docfile=request.FILES['docfile'])
 
-            add.delay(4, 4, newdoc)
+            #add.delay(4, 4, newdoc)
 
             #newdoc = Document(docfile=request.FILES['docfile'])
-            #newdoc.save()
+            newdoc.save()
 
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('files'))
