@@ -2,6 +2,8 @@ from django.urls import path, include
 from . import views
 from django.conf.urls import url
 
+from .views import verify
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^books/$', views.BookListView.as_view(), name='books'),
@@ -18,5 +20,6 @@ urlpatterns = [
     url(r'^book/(?P<pk>\d+)/update/$', views.BookUpdate.as_view(), name='book_update'),
     url(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book_delete'),
     url(r'files/$', views.files, name='files'),
+    url(r'^verify/(?P<uuid>[a-z0-9\-]+)/', verify, name='verify'),
 
 ]

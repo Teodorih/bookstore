@@ -160,3 +160,12 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 
 
 AUTH_USER_MODEL = 'catalog.User'
+
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER"),
+EMAIL_HOST_PASSWORD =  os.getenv("EMAIL_HOST_USER"),
+EMAIL_PORT = 587
+
+FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]

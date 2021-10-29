@@ -1,10 +1,13 @@
 import logging
 
+from django.db.backends.utils import logger
+from django.http import HttpResponse
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from .celery import app
-
+from .models import Document
+from django.core.files import File
 
 @app.task
 def send_verification_email(user_id):
@@ -23,19 +26,14 @@ def send_verification_email(user_id):
         logging.warning("Tried to send verification email to non-existing use")
 
 
-#from celery import Celery
+@app.task
+def upload_file(file_path, file_name):
+    with open(file_path, 'rb') as f:
+        file = File(f)
+        logger.info("document saved successfully")
+        file.name = file_name
+        newdoc = Document(docfile=file)
+        logger.info("document sav1d 1successfully")
+        newdoc.save()
 
-#celery -A catalog.tasks worker -l info
-
-#app = Celery('catalog', broker='redis://localhost:6379',  include=['catalog.tasks'])
-i = 1 +2
-
-#app.conf.update(Celery_TAST_RESULT_EXPIRES=3600,)
-
-if __name__ == '__main__':
-  #  app.start()
-    pass
-#@app.task
-def add(x, y, newdoc):
-    newdoc.save()
-    return x + y
+    return HttpResponse("document saved successfully")

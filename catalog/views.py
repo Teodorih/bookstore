@@ -1,17 +1,18 @@
 import datetime
 
 from django.contrib.auth.decorators import permission_required
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from .forms import RenewBookForm, DocumentForm
-from .models import Book, Author, BookInstance, Genre, Document
+from .models import Book, Author, BookInstance, Genre, Document, User
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
-from .tasks import add
+from catalog.tasks import upload_file
+from django.core.files.uploadedfile import TemporaryUploadedFile
+from django.core.files import File
 
 
 def index(request):
@@ -153,12 +154,15 @@ def files(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            newdoc = Document(docfile=request.FILES['docfile'])
+            #newdoc = Document(docfile=request.FILES['docfile'])
 
             #add.delay(4, 4, newdoc)
 
             #newdoc = Document(docfile=request.FILES['docfile'])
-            newdoc.save()
+            path = request.FILES['docfile'].temporary_file_path()
+            #upload_file.delay(path, request.FILES['docfile'].name)
+            upload_file(path, request.FILES['docfile'].name)
+
 
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('files'))
@@ -174,4 +178,16 @@ def files(request):
         'catalog/files.html',
         {'documents': documents, 'form': form}
     )
+
+
+def verify(request, uuid):
+    try:
+        user = User.objects.get(verification_uuid=uuid, is_verified=False)
+    except User.DoesNotExist:
+        raise Http404("User does not exist or is already verified")
+
+    user.is_verified = True
+    user.save()
+
+    return redirect('index')
 
