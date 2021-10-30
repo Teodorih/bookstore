@@ -1,5 +1,3 @@
-import logging
-
 from django.db.backends.utils import logger
 from django.http import HttpResponse
 from django.urls import reverse
@@ -8,12 +6,15 @@ from django.contrib.auth import get_user_model
 from .celery import app
 from .models import Document
 from django.core.files import File
+import logging
 
 @app.task
 def send_verification_email(user_id):
     UserModel = get_user_model()
     try:
         user = UserModel.objects.get(pk=user_id)
+        logging.warning("Test debug")
+
         send_mail(
             'Verify your QuickPublisher account',
             'Follow this link to verify your account: '

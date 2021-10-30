@@ -169,3 +169,11 @@ EMAIL_HOST_PASSWORD =  os.getenv("EMAIL_HOST_USER"),
 EMAIL_PORT = 587
 
 FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler',]
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379:1',
+    }
+}
