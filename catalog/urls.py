@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book_delete'),
     url(r'files/$', views.files, name='files'),
     url(r'^verify/(?P<uuid>[a-z0-9\-]+)/', verify, name='verify'),
+    path('task/', views.HomeView.as_view(), name='home'),
+    path('task/<str:task_id>/', views.TaskView.as_view(), name='task'),
 
 ]

@@ -9,3 +9,4 @@ psycopg2==2.9.1
 #python -m pip install pywin32
 #pip install django-redis
 #pip3 install django-widget-tweaks
+#pip install Pillow
