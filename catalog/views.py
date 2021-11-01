@@ -1,7 +1,6 @@
 import datetime
 
 from django.contrib.auth.decorators import permission_required
-from django.core.cache import cache
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy

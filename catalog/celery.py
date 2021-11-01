@@ -54,4 +54,9 @@ app.autodiscover_tasks()
 
 #celery -A catalog worker --loglevel=debug --concurrency=4
 
+#celery -A locallibrary.catalog worker --loglevel=debug --concurrency=4
+
+
+#celery -A catalog worker --loglevel=debug --concurrency=1 -without-gossip --without-mingle --without-heartbeat -Ofair
+
 #celery --app=locallibrary.catalog worker --concurrency=1 --loglevel=INFO
