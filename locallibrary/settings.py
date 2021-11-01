@@ -151,7 +151,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+IMAGES_DIR = os.path.join(MEDIA_ROOT, 'images')
 
+
+if not os.path.exists(MEDIA_ROOT) or not os.path.exists(IMAGES_DIR):
+    os.makedirs(IMAGES_DIR)
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'

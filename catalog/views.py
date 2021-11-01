@@ -6,13 +6,19 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-from .forms import RenewBookForm, DocumentForm
+from .forms import RenewBookForm, DocumentForm, FileUploadForm
 from .models import Book, Author, BookInstance, Genre, Document, User
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from catalog.tasks import upload_file
-from django.core.files.uploadedfile import TemporaryUploadedFile
-from django.core.files import File
+from catalog.tasks import upload_file, make_thumbnails
+
+import os
+from celery import current_app
+from django import forms
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views import View
 
 
 def index(request):
@@ -154,20 +160,8 @@ def files(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-
-            #task = add.delay(x=2, y=3)
-
-            #newdoc = Document(docfile=request.FILES['docfile'])
-
-            #add.delay(4, 4, newdoc)
-
-            #newdoc = Document(docfile=request.FILES['docfile'])
             path = request.FILES['docfile'].temporary_file_path()
             upload_file.delay(path, request.FILES['docfile'].name)
-            #upload_file(path, request.FILES['docfile'].name)
-
-
-            # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('files'))
     else:
         form = DocumentForm() # A empty, unbound form
@@ -194,3 +188,32 @@ def verify(request, uuid):
 
     return redirect('index')
 
+
+class HomeView(View):
+    def get(self, request):
+        form = FileUploadForm()
+        return render(request, 'thumbnailer/home.html', { 'form': form })
+
+    def post(self, request):
+        form = FileUploadForm(request.POST, request.FILES)
+        context = {}
+        if form.is_valid():
+            file_path = os.path.join(settings.IMAGES_DIR, request.FILES['image_file'].name)
+            with open(file_path, 'wb+') as fp:
+                for chunk in request.FILES['image_file']:
+                    fp.write(chunk)
+            task = make_thumbnails.delay(file_path, thumbnails=[(128, 128)])
+            context['task_id'] = task.id
+            context['task_status'] = task.status
+            return render(request, 'thumbnailer/home.html', context)
+        context['form'] = form
+        return render(request, 'thumbnailer/home.html', context)
+
+
+class TaskView(View):
+    def get(self, request, task_id):
+        task = current_app.AsyncResult(task_id)
+        response_data = {'task_status': task.status, 'task_id': task.id}
+        if task.status == 'SUCCESS':
+            response_data['results'] = task.get()
+        return JsonResponse(response_data)

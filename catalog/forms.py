@@ -54,3 +54,7 @@ class DocumentForm(forms.Form):
         label='Select a file',
         help_text='max. 42 megabytes'
     )
+
+
+class FileUploadForm(forms.Form):
+    image_file = forms.ImageField(required=True)
