@@ -11,7 +11,6 @@ from .models import Book, Author, BookInstance, Genre, Document, User
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from catalog.tasks import upload_file
-from catalog.celery import add
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.core.files import File
 
@@ -156,7 +155,7 @@ def files(request):
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
 
-            task = add.delay(x=2, y=3)
+            #task = add.delay(x=2, y=3)
 
             #newdoc = Document(docfile=request.FILES['docfile'])
 
@@ -164,7 +163,7 @@ def files(request):
 
             #newdoc = Document(docfile=request.FILES['docfile'])
             path = request.FILES['docfile'].temporary_file_path()
-            #upload_file.delay(path, request.FILES['docfile'].name)
+            upload_file.delay(path, request.FILES['docfile'].name)
             #upload_file(path, request.FILES['docfile'].name)
 
 

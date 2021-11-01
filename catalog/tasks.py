@@ -3,12 +3,13 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from .celery import app
+from locallibrary.celery import celery_app
 from .models import Document
 from django.core.files import File
 import logging
 
-@app.task
+
+@celery_app.task
 def send_verification_email(user_id):
     UserModel = get_user_model()
     try:
@@ -27,7 +28,7 @@ def send_verification_email(user_id):
         logging.warning("Tried to send verification email to non-existing use")
 
 
-@app.task
+@celery_app.task
 def upload_file(file_path, file_name):
     with open(file_path, 'rb') as f:
         file = File(f)
@@ -36,5 +37,3 @@ def upload_file(file_path, file_name):
         newdoc = Document(docfile=file)
         logger.info("document sav1d 1successfully")
         newdoc.save()
-
-    return HttpResponse("document saved successfully")

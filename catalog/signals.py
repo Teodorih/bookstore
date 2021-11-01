@@ -6,7 +6,7 @@ from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.urls import reverse
-from catalog.tasks import send_verification_email
+#from catalog.tasks import send_verification_email
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 def user_post_save(sender, instance, signal, *args, **kwargs):
     if not instance.is_verified:
         # Send verification email
-        send_verification_email.delay(instance.pk)
+        #send_verification_email.delay(instance.pk)
+        pass
 
 
 def init_signals():
